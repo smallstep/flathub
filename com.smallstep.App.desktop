@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Smallstep App
+Comment=Smallstep App
+GenericName=Smallstep App for Linux
+Exec=/usr/bin/flatpak run com.smallstep.App
+Icon=com.smallstep.App
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Network;
+X-Flatpak-Tags=proprietary;
+X-Flatpak=com.smallstep.App
