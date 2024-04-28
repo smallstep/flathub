@@ -79,7 +79,7 @@ modules:
         x-checker-data:
           type: rotating-url
           url: https://dl.smallstep.com/smallstep-desktop/latest/smallstep-desktop_linux_amd64.tar.gz
-          pattern: https://github.com/smallstep/smallstep-desktop/releases/download/v([0-9.]+(?:-\w+))/smallstep-desktop_linux_v([0-9.]+(?:-\w+))_amd64.tar.gz
+          pattern: https://github.com/smallstep/smallstep-desktop/releases/download/v([0-9.]+(?:-\w+)?)/smallstep-desktop_linux_v([0-9.]+(?:-\w+)?)_amd64.tar.gz
       - type: file
         path: com.smallstep.Smallstep.desktop
       - type: file
