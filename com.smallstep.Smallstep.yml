@@ -1,87 +1,95 @@
-id: com.smallstep.App
-runtime: org.gnome.Platform
-runtime-version: '46'
-sdk: org.gnome.Sdk
+id: com.smallstep.Smallstep
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: smallstep
 rename-icon: smallstep
+
 finish-args:
-  - --device=all
-  - --env=DCONF_USER_CONFIG_DIR=.config/dconf # For GNOME proxy resolution
-  - --env=GIO_EXTRA_MODULES=/app/lib/gio/modules # For GNOME proxy resolution
-  - --env=GSETTINGS_BACKEND=dconf # For GNOME proxy resolution
-  - --env=GTK_PATH=/app/lib/gtkmodules
-  - --filesystem=~/.config/dconf:ro # For GNOME proxy resolution
-  - --filesystem=~/.config/kioslaverc # For KDE proxy resolution (KDE5 only)
-  - --filesystem=xdg-desktop
-  - --filesystem=xdg-download # Default download directory
-  - --filesystem=xdg-run/dconf # For GNOME proxy resolution
-  - --filesystem=xdg-run/gvfsd
-  - --persist=step-agent
+  - --socket=wayland
+  - --socket=fallback-x11
   - --share=ipc
   - --share=network
-  - --socket=fallback-x11
-  - --socket=pcsc # Webauthn / FIDO
-  - --socket=session-bus
-  - --socket=system-bus
-  - --socket=wayland
-  - --socket=x11
-  - --system-talk-name=org.freedesktop.NetworkManager
-  - --talk-name=ca.desrt.dconf # For GNOME proxy resolution
-  - --talk-name=com.canonical.AppMenu.Registrar
-  - --talk-name=org.freedesktop.FileManager1
+  # FIXME(josh) - wails hard-codes the name it requests on the bus
+  - --own-name=org.wails.smallstep
   - --talk-name=org.freedesktop.Notifications
-  - --talk-name=org.freedesktop.ScreenSaver
-  - --talk-name=org.freedesktop.secrets
-  - --talk-name=org.gnome.SessionManager
-  - --talk-name=org.gtk.vfs.*
-  - --talk-name=org.kde.kwalletd5 # Used for password encryption under KDE5 environments
-  - --talk-name=org.kde.kwalletd6 # Used for password encryption under KDE6 environments
   - --talk-name=org.kde.StatusNotifierWatcher
-
-command: app-wrapper.sh
+  - --talk-name=org.freedesktop.systemd1.*
+  - --system-talk-name=org.freedesktop.NetworkManager
+  - --device=all
 
 modules:
+  # systray/menu support
   - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
 
-  - name: pcsc-lite
-    config-opts:
-    - "--disable-libudev"
-    - "--disable-libsystemd"
-    - "--without-systemdsystemunitdir"
+  # TODO(josh) - required, wails depends in webkit2gtk-4.0
+  - name: webkit2gtk-4.0
     sources:
-    - type: archive
-      url: https://pcsclite.apdu.fr/files/pcsc-lite-1.9.5.tar.bz2
-      sha256: 9ee3f9b333537562177893559ad4f7b8d5c23ebe828eef53056c02db14049d08
-      x-checker-data:
-        type: anitya
-        project-id: 2611
-        url-template: https://pcsclite.apdu.fr/files/pcsc-lite-$version.tar.bz2
+      - type: archive
+        url: https://webkitgtk.org/releases/webkitgtk-2.44.1.tar.xz
+        sha256: 425b1459b0f04d0600c78d1abb5e7edfa3c060a420f8b231e9a6a2d5d29c5561
+        x-checker-data:
+          type: html
+          url: https://webkitgtk.org/releases/
+          version-pattern: LATEST-STABLE-(\d[\.\d]+\d)
+          url-template: https://webkitgtk.org/releases/webkitgtk-$version.tar.xz
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DPORT=GTK
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DUSE_GTK4=OFF
+      - -DUSE_SOUP2=ON
+      - -DUSE_LIBBACKTRACE=OFF
+      - -DUSE_LIBSECRET=OFF
+      - -DUSE_JPEGXL=OFF
+      - -DUSE_WOFF2=OFF
+      - -DUSE_AVIF=OFF
+      - -DENABLE_DOCUMENTATION=OFF
+      - -DENABLE_MINIBROWSER=OFF
+      - -DENABLE_WEBDRIVER=OFF
+      - -DENABLE_GAMEPAD=OFF
+      - -DENABLE_SPELLCHECK=OFF
+      - -DENABLE_BUBBLEWRAP_SANDBOX=OFF
+      - -DENABLE_PDFJS=OFF
     modules:
-      - shared-modules/libusb/libusb.json
+      - shared-modules/libsoup/libsoup-2.4.json
 
-  - webkit2gtk.yml
+      - name: unifdef
+        no-autogen: true
+        make-install-args:
+          - prefix=${FLATPAK_DEST}
+        sources:
+        - type: archive
+          url: https://dotat.at/prog/unifdef/unifdef-2.12.tar.xz
+          sha256: 43ce0f02ecdcdc723b2475575563ddb192e988c886d368260bc0a63aee3ac400
+          x-checker-data:
+            type: anitya
+            project-id: 5046
+            url-template: https://dotat.at/prog/unifdef/unifdef-$version.tar.xz
+        cleanup:
+        - '*'
 
   - name: Smallstep
+    sources:
+      - type: archive
+        url: https://github.com/smallstep/smallstep-desktop/releases/download/v0.7.4-next/smallstep-desktop_linux_v0.7.4-next_amd64.tar.gz
+        sha256: c48ab0a5b3f8c1c8e6b92533b1803a84723bf92b2bb5ab656b2515dc779b9652
+        strip-components: 0
+        x-checker-data:
+          type: rotating-url
+          url: https://dl.smallstep.com/smallstep-desktop/latest/smallstep-desktop_linux_amd64.tar.gz
+          pattern: https://github.com/smallstep/smallstep-desktop/releases/download/v([0-9.]+(?:-\w+))/smallstep-desktop_linux_v([0-9.]+(?:-\w+))_amd64.tar.gz
+      - type: file
+        path: com.smallstep.Smallstep.desktop
+      - type: file
+        path: com.smallstep.Smallstep.metainfo.xml
+      - type: file
+        url: https://smallstep.com/static/graphics/smallstep_icon_hexagon_white.svg
+        sha256: 6678f6ac5e84fad3998015d62abd91fe5249dbb74089316591df4b302dccb26c
     buildsystem: simple
     build-commands:
-      - install -Dm 644 -t /app/share/applications com.smallstep.App.desktop
-      - install -Dm644 -t /app/share/metainfo/ com.smallstep.App.metainfo.xml
-      - install -Dm755 -t /app/share/icons/hicolor/scalable/apps/ smallstep.png
-      - install -Dm755 agent /app/bin/smallstep-agent
-      - install -Dm755 app-wrapper.sh /app/bin/app-wrapper.sh
-      - install -Dm755 agent-wrapper.sh /app/bin/agent-wrapper.sh
       - install -Dm755 gui /app/bin/smallstep
-    sources:
-      - type: file
-        path: com.smallstep.App.desktop
-      - type: file
-        path: com.smallstep.App.metainfo.xml
-      - type: file
-        path: smallstep.png
-      - type: file
-        path: ../../bin/gui
-      - type: file
-        path: ../../bin/agent
-      - type: file
-        path: app-wrapper.sh
-      - type: file
-        path: agent-wrapper.sh
+      - install -Dm755 agent /app/bin/smallstep-agent
+      - install -Dm644 -t /app/share/metainfo/ com.smallstep.Smallstep.metainfo.xml
+      - install -Dm755 smallstep_icon_hexagon_white.svg /app/share/icons/hicolor/scalable/apps/smallstep.svg
+      - install -Dm644 -t /app/share/applications/ com.smallstep.Smallstep.desktop
