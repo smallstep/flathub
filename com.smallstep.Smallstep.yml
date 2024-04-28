@@ -22,7 +22,8 @@ modules:
   # systray/menu support
   - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
 
-  # TODO(josh) - required, wails depends in webkit2gtk-4.0
+  # TODO(josh) - required, wails depends in webkit2gtk-4.0, switch to Gnome runtime
+  # once wails supports 4.1
   - name: webkit2gtk-4.0
     sources:
       - type: archive
