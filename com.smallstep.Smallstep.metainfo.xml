@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.smallstep.Smallstep</id>
+
+  <developer id="com.smallstep">
+    <name>Smallstep</name>
+  </developer>
+
+  <name>Smallstep</name>
+  <summary>High-assurance device identity and certificate management.</summary>
+  <url type="homepage">https://smallstep.com/</url>
+
+  <requires>
+    <internet>always</internet>
+  </requires>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+
+  <description>
+    <p>
+      Smallstep helps ensure that access to financial data, code repositories, PII and other sensitive resources is only possible from trusted, company-managed devices.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">com.smallstep.Smallstep.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/flathub/com.smallstep.Smallstep/master/resources/screenshot1.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/flathub/com.smallstep.Smallstep/master/resources/screenshot2.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/flathub/com.smallstep.Smallstep/master/resources/screenshot3.png</image>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="0.7.4" date="2024-04-28"/>
+  </releases>
+
+  <content_rating type="oars-1.1"/>
+</component>
