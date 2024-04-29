@@ -74,7 +74,7 @@ modules:
     sources:
       - type: archive
         url: https://github.com/smallstep/smallstep-desktop/releases/download/v0.7.4-next/smallstep-desktop_linux_v0.7.4-next_amd64.tar.gz
-        sha256: c48ab0a5b3f8c1c8e6b92533b1803a84723bf92b2bb5ab656b2515dc779b9652
+        sha256: b250ca8d34f431195957f35d4346020f9831295c6cadf48341e3d58763ba956a
         strip-components: 0
         x-checker-data:
           type: rotating-url
