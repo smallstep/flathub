@@ -1,7 +1,7 @@
 id: com.smallstep.Smallstep
-runtime: org.freedesktop.Platform
-runtime-version: '23.08'
-sdk: org.freedesktop.Sdk
+runtime: org.gnome.Platform
+runtime-version: '46'
+sdk: org.gnome.Sdk
 command: smallstep
 rename-icon: smallstep
 
@@ -22,59 +22,11 @@ modules:
   # systray/menu support
   - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
 
-  # TODO(josh) - required, wails depends in webkit2gtk-4.0, switch to Gnome runtime
-  # once wails supports 4.1
-  - name: webkit2gtk-4.0
-    sources:
-      - type: archive
-        url: https://webkitgtk.org/releases/webkitgtk-2.44.1.tar.xz
-        sha256: 425b1459b0f04d0600c78d1abb5e7edfa3c060a420f8b231e9a6a2d5d29c5561
-        x-checker-data:
-          type: html
-          url: https://webkitgtk.org/releases/
-          version-pattern: LATEST-STABLE-(\d[\.\d]+\d)
-          url-template: https://webkitgtk.org/releases/webkitgtk-$version.tar.xz
-    buildsystem: cmake-ninja
-    config-opts:
-      - -DPORT=GTK
-      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      - -DUSE_GTK4=OFF
-      - -DUSE_SOUP2=ON
-      - -DUSE_LIBBACKTRACE=OFF
-      - -DUSE_LIBSECRET=OFF
-      - -DUSE_JPEGXL=OFF
-      - -DUSE_WOFF2=OFF
-      - -DUSE_AVIF=OFF
-      - -DENABLE_DOCUMENTATION=OFF
-      - -DENABLE_MINIBROWSER=OFF
-      - -DENABLE_WEBDRIVER=OFF
-      - -DENABLE_GAMEPAD=OFF
-      - -DENABLE_SPELLCHECK=OFF
-      - -DENABLE_BUBBLEWRAP_SANDBOX=OFF
-      - -DENABLE_PDFJS=OFF
-    modules:
-      - shared-modules/libsoup/libsoup-2.4.json
-
-      - name: unifdef
-        no-autogen: true
-        make-install-args:
-          - prefix=${FLATPAK_DEST}
-        sources:
-        - type: archive
-          url: https://dotat.at/prog/unifdef/unifdef-2.12.tar.xz
-          sha256: 43ce0f02ecdcdc723b2475575563ddb192e988c886d368260bc0a63aee3ac400
-          x-checker-data:
-            type: anitya
-            project-id: 5046
-            url-template: https://dotat.at/prog/unifdef/unifdef-$version.tar.xz
-        cleanup:
-        - '*'
-
   - name: Smallstep
     sources:
       - type: archive
         url: https://github.com/smallstep/smallstep-desktop/releases/download/v0.7.4-next/smallstep-desktop_linux_v0.7.4-next_amd64.tar.gz
-        sha256: b250ca8d34f431195957f35d4346020f9831295c6cadf48341e3d58763ba956a
+        sha256: a8e6a13e6f72388d617079b7457c6e6083e4f1b7e983f0c1f73ef0152fa7a8f3
         strip-components: 0
         x-checker-data:
           type: rotating-url
