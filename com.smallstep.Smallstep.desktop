@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=Smallstep
+Comment=High-assurance device identity and certificate management.
+Categories=System;Security;
+Keywords=x509;certificates;wifi;vpn;device
+
+Icon=smallstep
+Exec=/app/bin/smallstep
+Terminal=false
+
+X-Flatpak-Tags=proprietary;
+X-Flatpak=com.smallstep.Smallstep

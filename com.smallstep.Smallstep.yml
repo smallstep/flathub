@@ -1,0 +1,48 @@
+id: com.smallstep.Smallstep
+runtime: org.gnome.Platform
+runtime-version: '46'
+sdk: org.gnome.Sdk
+command: smallstep
+rename-icon: smallstep
+
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --share=network
+  # FIXME(josh) - wails hard-codes the name it requests on the bus
+  - --own-name=org.wails.smallstep
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --talk-name=org.freedesktop.systemd1.*
+  - --system-talk-name=org.freedesktop.NetworkManager
+  - --device=all
+
+modules:
+  # systray/menu support
+  - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
+
+  - name: Smallstep
+    sources:
+      - type: archive
+        url: https://github.com/smallstep/smallstep-desktop/releases/download/v0.7.4-next/smallstep-desktop_linux_v0.7.4-next_amd64.tar.gz
+        sha256: a8e6a13e6f72388d617079b7457c6e6083e4f1b7e983f0c1f73ef0152fa7a8f3
+        strip-components: 0
+        x-checker-data:
+          type: rotating-url
+          url: https://dl.smallstep.com/smallstep-desktop/latest/smallstep-desktop_linux_amd64.tar.gz
+          pattern: https://github.com/smallstep/smallstep-desktop/releases/download/v([0-9.]+(?:-\w+)?)/smallstep-desktop_linux_v([0-9.]+(?:-\w+)?)_amd64.tar.gz
+      - type: file
+        path: com.smallstep.Smallstep.desktop
+      - type: file
+        path: com.smallstep.Smallstep.metainfo.xml
+      - type: file
+        url: https://smallstep.com/static/graphics/smallstep_icon_hexagon_white.svg
+        sha256: 6678f6ac5e84fad3998015d62abd91fe5249dbb74089316591df4b302dccb26c
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 gui /app/bin/smallstep
+      - install -Dm755 agent /app/bin/smallstep-agent
+      - install -Dm644 -t /app/share/metainfo/ com.smallstep.Smallstep.metainfo.xml
+      - install -Dm755 smallstep_icon_hexagon_white.svg /app/share/icons/hicolor/scalable/apps/smallstep.svg
+      - install -Dm644 -t /app/share/applications/ com.smallstep.Smallstep.desktop
