@@ -25,13 +25,13 @@ modules:
   - name: Smallstep
     sources:
       - type: archive
-        url: https://github.com/smallstep/smallstep-desktop/releases/download/v0.7.4-next/smallstep-desktop_linux_v0.7.4-next_amd64.tar.gz
-        sha256: 67037613a4f0c21d1440788c6d62bde63490516468243b3b14a8a0cc5f35bc19
+        url: https://github.com/smallstep/smallstep-desktop/releases/download/v0.8.2/Smallstep_linux_0.8.2.tar.gz
+        sha256: 8c5b76a9ff68aedc03436f7367ee32e1315d8f13a94d9825e6af03a7209b670d
         strip-components: 0
         x-checker-data:
           type: rotating-url
-          url: https://dl.smallstep.com/smallstep-desktop/latest/smallstep-desktop_linux_amd64.tar.gz
-          pattern: https://github.com/smallstep/smallstep-desktop/releases/download/v([0-9.]+(?:-\w+)?)/smallstep-desktop_linux_v([0-9.]+(?:-\w+)?)_amd64.tar.gz
+          url: https://dl.smallstep.com/smallstep-desktop/latest/Smallstep_linux_0.8.2.tar.gz
+          pattern: https://github.com/smallstep/smallstep-desktop/releases/download/v([0-9.]+(?:-\w+)?)/Smallstep_linux_v([0-9.]+(?:-\w+)?).tar.gz
       - type: file
         path: com.smallstep.Smallstep.desktop
       - type: file
@@ -41,8 +41,8 @@ modules:
         sha256: 6678f6ac5e84fad3998015d62abd91fe5249dbb74089316591df4b302dccb26c
     buildsystem: simple
     build-commands:
-      - install -Dm755 gui /app/bin/smallstep
-      - install -Dm755 agent /app/bin/smallstep-agent
+      - install -Dm755 smallstep /app/bin/smallstep
+      - install -Dm755 smallstep-agent /app/bin/smallstep-agent
       - install -Dm644 -t /app/share/metainfo/ com.smallstep.Smallstep.metainfo.xml
       - install -Dm755 smallstep_icon_hexagon_white.svg /app/share/icons/hicolor/scalable/apps/smallstep.svg
       - install -Dm644 -t /app/share/applications/ com.smallstep.Smallstep.desktop
